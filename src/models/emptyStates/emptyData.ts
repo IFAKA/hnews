@@ -1,3 +1,8 @@
-export const emptyData = {
-  counter: 0,
+import { News } from "../types"
+
+export const emptyNews: News = {
+  id: 0,
+  title: "",
+  author: "",
+  url: "",
 }

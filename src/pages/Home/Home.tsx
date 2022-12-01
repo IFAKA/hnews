@@ -1,33 +1,39 @@
-import { Spinner } from "@/components"
-import { useData } from "@/context"
-import { IContext } from "@/models"
-import { urls } from "@/services"
-import useSWR from "swr"
+import { Error, News, Spinner } from "@/components"
+import { useNewsList } from "@/hooks"
+import { ITEM_HEIGHT } from "@/models"
+import InfiniteScroll from "react-infinite-scroll-component"
+import RenderIfVisible from "react-render-if-visible"
 
 const Home = () => {
-  const { data, setProp, reset } = useData() as IContext
-  const { data: api } = useSWR(urls.base)
-  const click = () => setProp({ counter: data.counter + 1 })
+  const { news, error, condition, length, hasMore, next } = useNewsList()
   return (
-    <>
-      <div className="font-bold">Home</div>
-      <button onClick={click} className={"block px-4 border w-full"}>
-        Clicked {data.counter} times
-      </button>
-      <button onClick={reset} className={"block px-4 border w-full"}>
-        Reset
-      </button>
-      {api ? (
-        <a
-          href={api[6]?.homepage}
-          className="max-w-xs break-words hover:underline"
-        >
-          {api[6]?.homepage}
-        </a>
+    <div className="flex justify-center">
+      {error ? (
+        <Error error={error} />
+      ) : condition ? (
+        <div className="w-full">
+          <InfiniteScroll
+            loader={<Spinner />}
+            dataLength={length}
+            hasMore={hasMore}
+            next={next}
+            className="grid 2xl:grid-cols-5 sm:grid-cols-3 gap-4 p-4"
+          >
+            {news.map((id) => (
+              <RenderIfVisible
+                key={id}
+                defaultHeight={ITEM_HEIGHT}
+                stayRendered={true}
+              >
+                <News id={id} />
+              </RenderIfVisible>
+            ))}
+          </InfiniteScroll>
+        </div>
       ) : (
         <Spinner />
       )}
-    </>
+    </div>
   )
 }
 export default Home

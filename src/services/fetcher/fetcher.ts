@@ -1,3 +1,2 @@
-import axios from "axios"
-const fetcher = (url: string) => axios.get(url).then((r) => r.data)
+const fetcher = (url: string) => fetch(url).then((r) => r.json())
 export default fetcher
