@@ -1,4 +1,4 @@
-import { Error, News, Spinner } from "@/components"
+import { News, Render, Spinner } from "@/components"
 import { useNewsList } from "@/hooks"
 import { ITEM_HEIGHT } from "@/models"
 import InfiniteScroll from "react-infinite-scroll-component"
@@ -7,10 +7,8 @@ import RenderIfVisible from "react-render-if-visible"
 const Home = () => {
   const { news, error, condition, length, hasMore, next } = useNewsList()
   return (
-    <div className="flex justify-center">
-      {error ? (
-        <Error error={error} />
-      ) : condition ? (
+    <Render when={condition} error={error} loader={<Spinner />}>
+      <div className="flex justify-center">
         <div className="w-full">
           <InfiniteScroll
             loader={<Spinner />}
@@ -30,10 +28,8 @@ const Home = () => {
             ))}
           </InfiniteScroll>
         </div>
-      ) : (
-        <Spinner />
-      )}
-    </div>
+      </div>
+    </Render>
   )
 }
 export default Home

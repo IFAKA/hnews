@@ -1,20 +1,17 @@
-import { useData } from "@/context"
-import { IContext, NEWS_PER_PAGE } from "@/models"
-import { API_URL, fetcher } from "@/services"
+import { NEWS_PER_PAGE } from "@/models"
+import { fetcher, getNewsList } from "@/services"
 import { useEffect, useState } from "react"
 import useSWR from "swr"
 
 const useNewsList = () => {
-  const { search } = useData() as IContext
   const [news, setNews] = useState<number[]>([])
-  const { data, error } = useSWR<number[]>(`${API_URL}topstories.json`, fetcher)
+  const { data, error } = useSWR<number[]>(getNewsList(), fetcher)
 
   useEffect(() => data && setNews(data.slice(0, NEWS_PER_PAGE)), [data])
 
   const length = news.length
   const condition = !!news.length
-  const hasMore =
-    !!data?.slice(news.length, news.length + NEWS_PER_PAGE).length && !search
+  const hasMore = !!data?.slice(news.length, news.length + NEWS_PER_PAGE).length
 
   const next = () =>
     data &&

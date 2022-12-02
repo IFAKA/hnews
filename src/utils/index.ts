@@ -1,1 +1,1 @@
-export * from "./formatData"
+export * from "./formatNews"
